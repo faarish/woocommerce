@@ -8,7 +8,7 @@ use Automattic\WooCommerce\Blocks\Utils\BlockTemplateUtils;
  *
  * @internal
  */
-class ProductSearchResultsTemplate extends AbstractTemplateWithFallback {
+class ProductSearchResultsTemplate extends AbstractTemplate {
 
 	/**
 	 * The slug of the template.
@@ -18,17 +18,9 @@ class ProductSearchResultsTemplate extends AbstractTemplateWithFallback {
 	const SLUG = 'product-search-results';
 
 	/**
-	 * The template used as a fallback if that one is customized.
-	 *
-	 * @var string
-	 */
-	public $fallback_template = ProductCatalogTemplate::SLUG;
-
-	/**
 	 * Initialization method.
 	 */
 	public function init() {
-		parent::init();
 		add_action( 'template_redirect', array( $this, 'render_block_template' ) );
 		add_filter( 'search_template_hierarchy', array( $this, 'update_search_template_hierarchy' ), 10, 3 );
 	}

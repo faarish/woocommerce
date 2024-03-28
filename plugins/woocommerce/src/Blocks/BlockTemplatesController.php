@@ -238,7 +238,13 @@ class BlockTemplatesController {
 			// If we have a template which is eligible for a fallback, we need to explicitly tell Gutenberg that
 			// it has a theme file (because it is using the fallback template file). And then `continue` to avoid
 			// adding duplicates.
-			if ( BlockTemplateUtils::set_has_theme_file_if_fallback_is_available( $query_result, $template_file ) ) {
+			if ( BlockTemplateUtils::is_template_in_query_result( $query_result, $template_file ) ) {
+				continue;
+			}
+
+			// If the template has a fallback, we should not include it in the list of templates.
+			$template_data = BlockTemplateUtils::get_template( $template_file->slug );
+			if ( isset( $template_data->fallback_template ) ) {
 				continue;
 			}
 
@@ -256,12 +262,6 @@ class BlockTemplatesController {
 			// the filesystem.
 			if ( 'custom' === $template_file->source ) {
 				$query_result[] = $template_file;
-				continue;
-			}
-
-			// If the template has a fallback, we should not include it in the list of templates.
-			$template_data = BlockTemplateUtils::get_template( $template_file->slug );
-			if ( isset( $template_data->fallback_template ) ) {
 				continue;
 			}
 

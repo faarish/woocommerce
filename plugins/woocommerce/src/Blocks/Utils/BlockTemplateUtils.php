@@ -578,32 +578,19 @@ class BlockTemplateUtils {
 	}
 
 	/**
-	 * Sets the `has_theme_file` to `true` for templates with fallbacks
-	 *
-	 * There are cases (such as tags, categories and attributes) in which fallback templates
-	 * can be used; so, while *technically* the theme doesn't have a specific file
-	 * for them, it is important that we tell Gutenberg that we do, in fact,
-	 * have a theme file (i.e. the fallback one).
-	 *
-	 * **Note:** this function changes the array that has been passed.
-	 *
-	 * It returns `true` if anything was changed, `false` otherwise.
+	 * Returns `true` if the $template has been found in the $query_result.
 	 *
 	 * @param array  $query_result Array of template objects.
-	 * @param object $template A specific template object which could have a fallback.
+	 * @param object $template A specific template object.
 	 *
 	 * @return boolean
 	 */
-	public static function set_has_theme_file_if_fallback_is_available( $query_result, $template ) {
+	public static function is_template_in_query_result( $query_result, $template ) {
 		foreach ( $query_result as &$query_result_template ) {
 			if (
 				$query_result_template->slug === $template->slug
 				&& $query_result_template->theme === $template->theme
 			) {
-				if ( self::template_is_eligible_for_product_archive_fallback_from_theme( $template->slug ) ) {
-					$query_result_template->has_theme_file = true;
-				}
-
 				return true;
 			}
 		}
