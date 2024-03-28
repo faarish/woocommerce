@@ -26,11 +26,20 @@ CUSTOMIZABLE_WC_TEMPLATES.forEach( ( testData ) => {
 			editorUtils,
 			page,
 		} ) => {
-			// Verify the template can be edited.
-			await editorUtils.visitTemplateEditor(
-				testData.templateName,
-				testData.templateType
-			);
+			// eslint-disable-next-line playwright/no-conditional-in-test
+			if ( testData.gutenbergTemplateName ) {
+				// Create a new template.
+				await editorUtils.createTemplate(
+					testData.gutenbergTemplateName,
+					testData.templateType
+				);
+			} else {
+				// Edit the WooCommerce default template.
+				await editorUtils.visitTemplateEditor(
+					testData.templateName,
+					testData.templateType
+				);
+			}
 			await editor.insertBlock( {
 				name: 'core/paragraph',
 				attributes: { content: userText },
@@ -52,9 +61,16 @@ CUSTOMIZABLE_WC_TEMPLATES.forEach( ( testData ) => {
 				'site-editor.php',
 				`path=/${ testData.templateType }/all`
 			);
-			await editorUtils.revertTemplateCustomizations(
-				testData.templateName
-			);
+			// eslint-disable-next-line playwright/no-conditional-in-test
+			if ( testData.fallbackTemplate ) {
+				await editorUtils.revertTemplateCreation(
+					testData.templateName
+				);
+			} else {
+				await editorUtils.revertTemplateCustomizations(
+					testData.templateName
+				);
+			}
 			await testData.visitPage( { frontendUtils, page } );
 			await expect( page.getByText( userText ) ).toHaveCount( 0 );
 		} );
