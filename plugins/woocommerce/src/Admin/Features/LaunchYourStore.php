@@ -19,6 +19,16 @@ class LaunchYourStore {
 			add_filter( 'woocommerce_admin_shared_settings', array( $this, 'preload_settings' ) );
 		}
 		add_action( 'wp_footer', array( $this, 'maybe_add_coming_soon_banner_on_frontend' ) );
+
+		// Register 'woocommerce_coming_soon_banner_dismissed' user meta.
+		add_action( 'init', function() {
+			register_meta( 'user', 'woocommerce_coming_soon_banner_dismissed', array(
+				'type'         => 'string',
+				'description'  => 'Indicate wheter user has dismissed coming soon notice or not',
+				'single'       => true,
+				'show_in_rest' => true,
+			) );
+		});
 	}
 
 	/**
@@ -135,7 +145,7 @@ class LaunchYourStore {
 		}
 
 		$link       = admin_url( 'admin.php?page=wc-settings#wc_settings_general_site_visibility_slotfill' );
-		$rest_url   = rest_url( 'wc-admin/launch-your-store/dismiss-coming-soon-banner' );
+		$rest_url   = rest_url( 'wp/v2/users/' . $current_user_id );
 		$rest_nonce = wp_create_nonce( 'wp_rest' );
 
 		$text = sprintf(
