@@ -32,7 +32,7 @@ export default {
 	},
 	showPrice: {
 		type: 'boolean',
-		default: true,
+		default: false,
 	},
 	localPickupText: {
 		type: 'string',
