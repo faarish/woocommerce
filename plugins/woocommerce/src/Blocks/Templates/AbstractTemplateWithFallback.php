@@ -40,7 +40,7 @@ abstract class AbstractTemplateWithFallback extends AbstractTemplate {
 			false !== $index && (
 				! array_key_exists( $index + 1, $templates ) || $templates[ $index + 1 ] !== $this->fallback_template
 			) ) {
-			array_splice( $templates, $index + 1, 0, 'archive-product' );
+			array_splice( $templates, $index + 1, 0, $this->fallback_template );
 		}
 
 		return $templates;
