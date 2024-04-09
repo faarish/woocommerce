@@ -501,30 +501,6 @@ class BlockTemplateUtils {
 	}
 
 	/**
-	 * Checks if we can fall back to an `archive-product` template stored on the db for a given slug.
-	 *
-	 * @param string $template_slug Slug to check for fallbacks.
-	 * @param array  $db_templates Templates that have already been found on the db.
-	 * @return boolean
-	 */
-	public static function template_is_eligible_for_fallback_from_db( $template_slug, $db_templates ) {
-		$registered_template = self::get_template( $template_slug );
-
-		if ( $registered_template && isset( $registered_template->fallback_template ) ) {
-			$array_filter = array_filter(
-				$db_templates,
-				function ( $template ) use ( $registered_template ) {
-					return isset( $registered_template->fallback_template ) && $registered_template->fallback_template === $template->slug;
-				}
-			);
-
-			return count( $array_filter ) > 0;
-		}
-
-		return false;
-	}
-
-	/**
 	 * Gets the `archive-product` fallback template stored on the db for a given slug.
 	 *
 	 * @param string $template_slug Slug to check for fallbacks.
@@ -543,23 +519,6 @@ class BlockTemplateUtils {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Checks if we can fall back to the `archive-product` file template for a given slug in the current theme.
-	 *
-	 * `taxonomy-product_cat`, `taxonomy-product_tag`, `taxonomy-attribute` templates can
-	 *  generally use the `archive-product` as a fallback if there are no specific overrides.
-	 *
-	 * @param string $template_slug Slug to check for fallbacks.
-	 * @return boolean
-	 */
-	public static function template_is_eligible_for_fallback_from_theme( $template_slug ) {
-		$registered_template = self::get_template( $template_slug );
-
-		return $registered_template && isset( $registered_template->fallback_template )
-			&& ! self::theme_has_template( $template_slug )
-			&& self::theme_has_template( $registered_template->fallback_template );
 	}
 
 	/**

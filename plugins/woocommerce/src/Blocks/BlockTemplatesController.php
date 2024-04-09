@@ -155,14 +155,6 @@ class BlockTemplatesController {
 
 		list( $template_id, $template_slug ) = $template_name_parts;
 
-		// If the theme has an archive-product.html template, but not a taxonomy-product_cat/tag/attribute.html template let's use the themes archive-product.html template.
-		if ( BlockTemplateUtils::template_is_eligible_for_fallback_from_theme( $template_slug ) ) {
-			$registered_template = BlockTemplateUtils::get_template( $template_slug );
-			$template_path       = BlockTemplateUtils::get_theme_template_path( $registered_template->fallback_template );
-			$template_object     = BlockTemplateUtils::create_new_block_template_object( $template_path, $template_type, $template_slug, true );
-			return BlockTemplateUtils::build_template_result_from_file( $template_object, $template_type );
-		}
-
 		// This is a real edge-case, we are supporting users who have saved templates under the deprecated slug. See its definition for more information.
 		// You can likely ignore this code unless you're supporting/debugging early customised templates.
 		if ( BlockTemplateUtils::DEPRECATED_PLUGIN_SLUG === strtolower( $template_id ) ) {
@@ -363,34 +355,6 @@ class BlockTemplatesController {
 				continue;
 			}
 
-			if ( BlockTemplateUtils::template_is_eligible_for_fallback_from_db( $template_slug, $already_found_templates ) ) {
-				$template              = clone BlockTemplateUtils::get_fallback_template_from_db( $template_slug, $already_found_templates );
-				$template_id           = explode( '//', $template->id );
-				$template->id          = $template_id[0] . '//' . $template_slug;
-				$template->slug        = $template_slug;
-				$template->title       = BlockTemplateUtils::get_block_template_title( $template_slug );
-				$template->description = BlockTemplateUtils::get_block_template_description( $template_slug );
-				$templates[]           = $template;
-				continue;
-			}
-
-			// If the theme has an archive-product.html template, but not a taxonomy-product_cat/tag/attribute.html template let's use the themes archive-product.html template.
-			if ( BlockTemplateUtils::template_is_eligible_for_fallback_from_theme( $template_slug ) ) {
-				$registered_template = BlockTemplateUtils::get_template( $template_slug );
-				$template_file       = BlockTemplateUtils::get_theme_template_path( $registered_template->fallback_template );
-				$templates[]         = BlockTemplateUtils::create_new_block_template_object( $template_file, $template_type, $template_slug, true );
-				continue;
-			}
-
-			// At this point the template only exists in the Blocks filesystem, if is a taxonomy-product_cat/tag/attribute.html template
-			// let's use the archive-product.html template from Blocks.
-			$registered_template = BlockTemplateUtils::get_template( $template_slug );
-			if ( $registered_template && isset( $registered_template->fallback_template ) ) {
-				$template_file = $this->get_template_path_from_woocommerce( $registered_template->fallback_template );
-				$templates[]   = BlockTemplateUtils::create_new_block_template_object( $template_file, $template_type, $template_slug, false );
-				continue;
-			}
-
 			// At this point the template only exists in the Blocks filesystem and has not been saved in the DB,
 			// or superseded by the theme.
 			$templates[] = BlockTemplateUtils::create_new_block_template_object( $template_file, $template_type, $template_slug );
@@ -412,18 +376,6 @@ class BlockTemplatesController {
 		$templates_from_woo = $this->get_block_templates_from_woocommerce( $slugs, $templates_from_db, $template_type );
 
 		return array_merge( $templates_from_db, $templates_from_woo );
-	}
-
-	/**
-	 * Returns the path of a template on the Blocks template folder.
-	 *
-	 * @param string $template_slug Block template slug e.g. single-product.
-	 * @param string $template_type wp_template or wp_template_part.
-	 *
-	 * @return string
-	 */
-	public function get_template_path_from_woocommerce( $template_slug, $template_type = 'wp_template' ) {
-		return BlockTemplateUtils::get_templates_directory( $template_type ) . '/' . $template_slug . '.html';
 	}
 
 	/**

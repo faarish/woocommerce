@@ -38,42 +38,6 @@ class BlockTemplateUtilsTest extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Provides data for testing template_is_eligible_for_fallback functions.
-	 */
-	public function provideFallbackData() {
-		return array(
-			array( 'taxonomy-product_cat', true ),
-			array( 'taxonomy-product_tag', true ),
-			array( 'taxonomy-product_attribute', true ),
-			array( 'single-product', false ),
-		);
-	}
-
-	/**
-	 * Test template_is_eligible_for_fallback_from_db when the template is not eligible.
-	 */
-	public function test_template_is_eligible_for_fallback_from_db_no_eligible_template() {
-		$this->assertEquals( false, BlockTemplateUtils::template_is_eligible_for_fallback_from_db( 'single-product', array() ) );
-	}
-
-	/**
-	 * Test template_is_eligible_for_fallback_from_db when the template is eligible but not in the db.
-	 */
-	public function test_template_is_eligible_for_fallback_from_db_eligible_template_empty_db() {
-		$this->assertEquals( false, BlockTemplateUtils::template_is_eligible_for_fallback_from_db( 'taxonomy-product_cat', array() ) );
-	}
-
-	/**
-	 * Test template_is_eligible_for_fallback_from_db when the template is eligible and in the db.
-	 */
-	public function test_template_is_eligible_for_fallback_from_db_eligible_template_custom_in_the_db() {
-		$db_templates = array(
-			(object) array( 'slug' => 'archive-product' ),
-		);
-		$this->assertEquals( true, BlockTemplateUtils::template_is_eligible_for_fallback_from_db( 'taxonomy-product_cat', $db_templates ) );
-	}
-
-	/**
 	 * Test build_template_result_from_post.
 	 */
 	public function test_build_template_result_from_post() {
