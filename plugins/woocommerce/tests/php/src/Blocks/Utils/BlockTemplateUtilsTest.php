@@ -142,9 +142,9 @@ class BlockTemplateUtilsTest extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test set_has_theme_file_if_fallback_is_available when the template file has no fallback.
+	 * Test is_template_in_query_result when the template file has no fallback.
 	 */
-	public function test_set_has_theme_file_if_fallback_is_available_no_fallback() {
+	public function test_is_template_in_query_result() {
 		$query_result = array(
 			(object) array(
 				'slug'  => 'single-product',
@@ -152,31 +152,18 @@ class BlockTemplateUtilsTest extends WP_UnitTestCase {
 			),
 		);
 
-		$template_file = (object) array(
+		$template_file_no_match = (object) array(
 			'slug'  => 'archive-product',
 			'theme' => 'twentytwentytwo',
 		);
 
-		$this->assertFalse( BlockTemplateUtils::set_has_theme_file_if_fallback_is_available( $query_result, $template_file ) );
-	}
-
-	/**
-	 * Test set_has_theme_file_if_fallback_is_available when the template file has a fallback.
-	 */
-	public function test_set_has_theme_file_if_fallback_is_available_with_fallback() {
-		$template_file = (object) array(
-			'slug'  => 'taxonomy-product_cat',
+		$template_file_match = (object) array(
+			'slug'  => 'single-product',
 			'theme' => 'twentytwentytwo',
 		);
 
-		$query_result = array(
-			(object) array(
-				'slug'  => 'taxonomy-product_cat',
-				'theme' => 'twentytwentytwo',
-			),
-		);
-
-		$this->assertTrue( BlockTemplateUtils::set_has_theme_file_if_fallback_is_available( $query_result, $template_file ) );
+		$this->assertFalse( BlockTemplateUtils::is_template_in_query_result( $query_result, $template_file_no_match ) );
+		$this->assertTrue( BlockTemplateUtils::is_template_in_query_result( $query_result, $template_file_match ) );
 	}
 
 	/**
