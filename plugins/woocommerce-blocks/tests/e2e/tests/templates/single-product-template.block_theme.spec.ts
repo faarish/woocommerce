@@ -17,7 +17,7 @@ test.describe( 'Single Product template', async () => {
 		const testData = {
 			productName: 'Belt',
 			permalink: '/product/belt',
-			templateName: 'Product: Belt',
+			templateName: 'Single Product Belt',
 			templatePath: 'single-product-belt',
 			templateType: 'wp_template',
 		};
