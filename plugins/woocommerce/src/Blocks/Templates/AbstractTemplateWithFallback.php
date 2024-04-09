@@ -35,7 +35,7 @@ abstract class AbstractTemplateWithFallback extends AbstractTemplate {
 	 * @param array $templates Templates that match the pages_template_hierarchy.
 	 */
 	public function template_hierarchy( $templates ) {
-		$index = array_search( static::SLUG, $templates ) || array_search( static::SLUG . '.php', $templates );
+		$index = array_search( static::SLUG, $templates, true ) || array_search( static::SLUG . '.php', $templates, true );
 		if (
 			false !== $index && (
 				! array_key_exists( $index + 1, $templates ) || $templates[ $index + 1 ] !== $this->fallback_template
