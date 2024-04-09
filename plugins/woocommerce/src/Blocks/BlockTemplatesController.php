@@ -1,7 +1,6 @@
 <?php
 namespace Automattic\WooCommerce\Blocks;
 
-use Automattic\WooCommerce\Blocks\Templates\ProductCatalogTemplate;
 use Automattic\WooCommerce\Blocks\Utils\BlockTemplateUtils;
 
 /**
@@ -297,19 +296,6 @@ class BlockTemplatesController {
 		);
 
 		return $query_result;
-	}
-
-	/**
-	 * Gets the templates saved in the database.
-	 *
-	 * @param array  $slugs An array of slugs to retrieve templates for.
-	 * @param string $template_type wp_template or wp_template_part.
-	 *
-	 * @return int[]|\WP_Post[] An array of found templates.
-	 */
-	public function get_block_templates_from_db( $slugs = array(), $template_type = 'wp_template' ) {
-		wc_deprecated_function( 'BlockTemplatesController::get_block_templates_from_db()', '7.8', '\Automattic\WooCommerce\Blocks\Utils\BlockTemplateUtils::get_block_templates_from_db()' );
-		return BlockTemplateUtils::get_block_templates_from_db( $slugs, $template_type );
 	}
 
 	/**
