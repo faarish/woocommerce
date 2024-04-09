@@ -49,7 +49,7 @@ Cases when we capitalize:
 Cases when we use lower case:
 
 - "ecommerce" (not "eCommerce")
-- email address - `info@woo.com`
+- email address - `info@woocommerce.com`
 - website URL - `developer.woo.com`
 
 ### Contractions
