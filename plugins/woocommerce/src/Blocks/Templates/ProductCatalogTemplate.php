@@ -24,6 +24,7 @@ class ProductCatalogTemplate extends AbstractTemplate {
 	public function init() {
 		add_action( 'template_redirect', array( $this, 'render_block_template' ) );
 		add_filter( 'post_type_archive_title', array( $this, 'update_product_archive_title' ), 10, 2 );
+		add_filter( 'current_theme_supports-block-templates', array( $this, 'remove_block_template_support_for_shop_page' ) );
 	}
 
 	/**
@@ -77,5 +78,31 @@ class ProductCatalogTemplate extends AbstractTemplate {
 		}
 
 		return $post_type_name;
+	}
+
+	/**
+	 * Remove the template panel from the Sidebar of the Shop page because
+	 * the Site Editor handles it.
+	 *
+	 * @see https://github.com/woocommerce/woocommerce-gutenberg-products-block/issues/6278
+	 *
+	 * @param bool $is_support Whether the active theme supports block templates.
+	 *
+	 * @return bool
+	 */
+	public function remove_block_template_support_for_shop_page( $is_support ) {
+		global $pagenow, $post;
+
+		if (
+			is_admin() &&
+			'post.php' === $pagenow &&
+			function_exists( 'wc_get_page_id' ) &&
+			is_a( $post, 'WP_Post' ) &&
+			wc_get_page_id( 'shop' ) === $post->ID
+		) {
+			return false;
+		}
+
+		return $is_support;
 	}
 }
