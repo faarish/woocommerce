@@ -26,8 +26,10 @@ test.describe( 'A basic set of tests to ensure WP, wp-admin and my-account load'
 
 	test.describe( 'Sign in as customer', () => {
 		test.use( {
+			// this doesn't work
 			storageState: process.env.CUSTOMERSTATE,
 		} );
+
 		test( 'Load customer my account page', async ( { page } ) => {
 			await page.goto( '/my-account' );
 			const title = page.locator( 'h1.wp-block-post-title' );
